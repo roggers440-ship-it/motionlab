@@ -1,0 +1,236 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-display: 'Space Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, monospace;
+--font-display: 'Space Grotesk Variable', 'Noto Sans Devanagari Variable', ui-sans-serif, system-ui, sans-serif;
+--font-sans: 'Inter Variable', 'Noto Sans Devanagari Variable', ui-sans-serif, system-ui, sans-serif;
+  --color-ink: #07070b;
+  --color-ink-2: #0e0e15;
+  --color-ink-3: #161620;
+  --color-line: rgb(255 255 255 / 0.08);
+  --color-line-2: rgb(255 255 255 / 0.14);
+  --color-fg: #ecebf5;
+  --color-dim: #9a99ad;
+  --color-mute: #6b6a7e;
+  --color-acc: #ff6ec7;
+  --color-acc-2: #7c5cff;
+  --color-acc-3: #38e1c6;
+  --color-warn: #ffd479;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quint: cubic-bezier(0.83, 0, 0.17, 1);
+}
+
+:root {
+  color-scheme: dark;
+  --hue: 320;
+  --cat: oklch(0.75 0.17 var(--hue));
+  --cat-soft: oklch(0.75 0.17 var(--hue) / 0.14);
+}
+
+html {
+  background: var(--color-ink);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  min-height: 100dvh;
+  background:
+    radial-gradient(1200px 600px at 80% -10%, oklch(0.35 0.12 var(--hue) / 0.35), transparent 60%),
+    radial-gradient(900px 500px at -10% 10%, oklch(0.3 0.1 265 / 0.25), transparent 60%),
+    var(--color-ink);
+  background-attachment: fixed;
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--cat);
+  color: var(--color-ink);
+}
+
+/* Lenis recommended base styles */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+.lenis [data-lenis-prevent],
+.lenis [data-lenis-prevent-wheel] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--cat);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* ----- reusable bits ----- */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-dim);
+}
+
+.glass {
+  background: rgb(18 18 28 / 0.66);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid var(--color-line);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  padding: 0.55rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid var(--color-line-2);
+  background: rgb(255 255 255 / 0.04);
+  transition: background 0.2s, border-color 0.2s, transform 0.2s var(--ease-out-expo);
+  user-select: none;
+}
+.btn:hover {
+  background: rgb(255 255 255 / 0.09);
+  border-color: rgb(255 255 255 / 0.24);
+}
+.btn:active {
+  transform: scale(0.97);
+}
+.btn-primary {
+  background: var(--cat);
+  color: var(--color-ink);
+  border-color: transparent;
+}
+.btn-primary:hover {
+  background: oklch(0.82 0.15 var(--hue));
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 999px;
+  padding: 0.18rem 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  border: 1px solid var(--color-line-2);
+  color: var(--color-dim);
+  white-space: nowrap;
+}
+
+/* Demo stage: isolate layout/paint so a demo can never trigger page-wide work */
+.stage {
+  position: relative;
+  contain: layout paint;
+  isolation: isolate;
+  border-radius: 1.5rem;
+  border: 1px solid var(--color-line);
+  background:
+    radial-gradient(800px 400px at 50% 0%, var(--cat-soft), transparent 70%),
+    var(--color-ink-2);
+  overflow: hidden;
+}
+/* 3D stages must not create a stacking context: overlays inside them use
+   z-30 to sit above the shared fixed canvas (z-20). */
+.stage[data-webgl='true'] {
+  contain: none;
+  isolation: auto;
+}
+
+input[type='range'] {
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 99px;
+  background: linear-gradient(to right, var(--cat) var(--fill, 50%), rgb(255 255 255 / 0.12) var(--fill, 50%));
+  outline: none;
+}
+input[type='range']::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgb(0 0 0 / 0.25);
+  cursor: grab;
+}
+input[type='range']::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+}
+
+/* sugar-high code theme */
+.code {
+  --sh-class: #7c5cff;
+  --sh-identifier: #ecebf5;
+  --sh-sign: #8a89a0;
+  --sh-property: #38e1c6;
+  --sh-entity: #ffd479;
+  --sh-jsxliterals: #c8c7da;
+  --sh-string: #ff9ad5;
+  --sh-keyword: #ff6ec7;
+  --sh-comment: #5f5e74;
+}
+.code .sh__line {
+  display: block;
+  min-height: 1lh;
+}
+
+/* Global reduced motion: CSS-driven animations collapse too.
+   data-reduced is set from the in-app toggle as well as the OS setting. */
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-reduced='false']) *,
+  html:not([data-reduced='false']) *::before,
+  html:not([data-reduced='false']) *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+html[data-reduced='true'] *,
+html[data-reduced='true'] *::before,
+html[data-reduced='true'] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+@keyframes ml-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+@keyframes ml-pulse {
+  50% {
+    opacity: 0.4;
+  }
+}
+@keyframes ml-orbit {
+  from {
+    transform: translate3d(-6%, -4%, 0) scale(1);
+  }
+  to {
+    transform: translate3d(8%, 10%, 0) scale(1.15);
+  }
+}
